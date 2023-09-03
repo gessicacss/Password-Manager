@@ -20,21 +20,29 @@ export class CardsController {
 
   @Post()
   create(@Body() createCardDto: CreateCardDto, @User() user: UserPrisma) {
-    return this.cardsService.create(createCardDto);
+    const { id } = user;
+
+    return this.cardsService.create(createCardDto, id);
   }
 
   @Get()
   findAll(@User() user: UserPrisma) {
-    return this.cardsService.findAll();
+    const { id } = user;
+
+    return this.cardsService.findAll(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.cardsService.findOne(+id);
+    const userId = user.id;
+
+    return this.cardsService.findOne(+id, userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.cardsService.remove(+id);
+    const userId = user.id;
+
+    return this.cardsService.remove(+id, userId);
   }
 }

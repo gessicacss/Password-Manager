@@ -47,7 +47,7 @@ export class CredentialsService {
   async verifyCredential(id: number, userId: number) {
     const credential = await this.credentialsRepository.findOne(id);
     if (!credential) {
-      throw new NotFoundException('Theres no note with this id!');
+      throw new NotFoundException('Theres no credential with this id!');
     }
 
     if (credential.userId !== userId) {

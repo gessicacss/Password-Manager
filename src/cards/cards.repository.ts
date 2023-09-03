@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { CryptrService } from '../cryptr/cryptr.service';
 
 @Injectable()
-export class CardsService {
-  create(createCardDto: CreateCardDto) {
-    return 'This action adds a new card';
+export class CardsRepository {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cryptr: CryptrService,
+  ) {}
+
+  findByTitleAndUserId(title: string, userId: number) {
+    return this.prisma.card.findFirst({
+      where: {
+        userId,
+        title,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all cards`;
+  create(data: CreateCardDto, userId: number) {
+    return this.prisma.card.create({
+      data: {
+        ...data,
+        password: this.cryptr.encrypt(data.password),
+        code: this.cryptr.encrypt(data.code),
+        userId,
+      },
+    });
+  }
+
+  findAll(userId: number) {
+    return this.prisma.card.findMany({
+      where: { userId },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} card`;
-  }
-
-  update(id: number, updateCardDto: UpdateCardDto) {
-    return `This action updates a #${id} card`;
+    return this.prisma.card.findUnique({
+      where: { id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} card`;
+    return this.prisma.card.delete({
+      where: { id },
+    });
   }
 }
