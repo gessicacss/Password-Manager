@@ -2,6 +2,8 @@ import { Body, Controller, Delete, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../guards/auth.guards';
 import { UsersService } from './users.service';
 import { EraseUserDTO } from './dto/erase-user.dto';
+import { User } from '../decorators/user.decorator';
+import { User as UserPrisma } from '@prisma/client';
 
 @UseGuards(AuthGuard)
 @Controller('erase')

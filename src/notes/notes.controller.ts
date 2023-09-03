@@ -21,21 +21,24 @@ export class NotesController {
   @Post()
   create(@Body() createNoteDto: CreateNoteDto, @User() user: UserPrisma) {
     const { id } = user;
-    return this.notesService.create(createNoteDto);
+    return this.notesService.create(createNoteDto, id);
   }
 
   @Get()
   findAll(@User() user: UserPrisma) {
-    return this.notesService.findAll();
+    const { id } = user;
+    return this.notesService.findAll(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.notesService.findOne(+id);
+    const userId = user.id;
+    return this.notesService.findOne(+id, userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.notesService.remove(+id);
+    const userId = user.id;
+    return this.notesService.remove(+id, userId);
   }
 }

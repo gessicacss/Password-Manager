@@ -7,5 +7,5 @@ export class CreateNoteDto {
 
   @IsNotEmpty()
   @IsString()
-  notes: string;
+  note: string;
 }
