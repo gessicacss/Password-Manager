@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { CredentialsModule } from './credentials/credentials.module';
 import { NotesModule } from './notes/notes.module';
 import { CardsModule } from './cards/cards.module';
+import { CryptrModule } from './cryptr/cryptr.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { CardsModule } from './cards/cards.module';
     CredentialsModule,
     NotesModule,
     CardsModule,
+    CryptrModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

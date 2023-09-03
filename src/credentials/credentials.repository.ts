@@ -1,21 +1,45 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCredentialDto } from './dto/create-credential.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { CryptrService } from '../cryptr/cryptr.service';
 
 @Injectable()
-export class CredentialsService {
-  create(createCredentialDto: CreateCredentialDto) {
-    return 'This action adds a new credential';
+export class CredentialsRepository {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cryptr: CryptrService,
+  ) {}
+
+  findByTitleAndUserId(userId: number, title: string) {
+    return this.prisma.credential.findFirst({
+      where: {
+        userId,
+        title,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all credentials`;
+  create(data: CreateCredentialDto, userId: number) {
+    return this.prisma.credential.create({
+      data: { ...data, password: this.cryptr.encrypt(data.password), userId },
+    });
+  }
+
+  findAll(userId: number) {
+    return this.prisma.credential.findMany({
+      where: { userId },
+    });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} credential`;
+    return this.prisma.credential.findUnique({
+      where: { id },
+    });
   }
 
   remove(id: number) {
-    return `This action removes a #${id} credential`;
+    return this.prisma.credential.delete({
+      where: { id },
+    });
   }
 }

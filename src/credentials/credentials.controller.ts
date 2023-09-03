@@ -21,23 +21,29 @@ export class CredentialsController {
   @Post()
   create(
     @Body() createCredentialDto: CreateCredentialDto,
-    @User() user: UserPrisma
+    @User() user: UserPrisma,
   ) {
-    return this.credentialsService.create(createCredentialDto);
+    const { id } = user;
+    return this.credentialsService.create(createCredentialDto, id);
   }
 
   @Get()
   findAll(@User() user: UserPrisma) {
-    return this.credentialsService.findAll();
+    const { id } = user;
+    return this.credentialsService.findAll(id);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.credentialsService.findOne(+id);
+    const userId = user.id;
+
+    return this.credentialsService.findOne(+id, userId);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string, @User() user: UserPrisma) {
-    return this.credentialsService.remove(+id);
+    const userId = user.id;
+
+    return this.credentialsService.remove(+id, userId);
   }
 }
