@@ -12,7 +12,6 @@ export class UsersController {
 
   @Delete()
   eraseUser(@Body() eraseUserDTO: EraseUserDTO, @User() user: UserPrisma) {
-    console.log(eraseUserDTO);
-    return this.userServices.eraseUser();
+    return this.userServices.eraseUser(eraseUserDTO.password, user);
   }
 }

@@ -2,9 +2,12 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
+import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +34,12 @@ export class UsersService {
     return user;
   }
 
-  eraseUser() {
-    throw new Error('Method not implemented.');
+  async eraseUser(password: string, user: User) {
+    const isPasswordRight = await bcrypt.compare(password, user.password);
+    if (!isPasswordRight) {
+      throw new UnauthorizedException('Incorrect password!');
+    }
+
+    await this.usersRepository.deleteUser(user.id);
   }
 }

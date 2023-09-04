@@ -28,4 +28,21 @@ export class UsersRepository {
       where: { id },
     });
   }
+
+  deleteUser(userId: number) {
+    return this.prisma.$transaction(async (prisma) => {
+      await prisma.credential.deleteMany({
+        where: { userId },
+      });
+      await prisma.card.deleteMany({
+        where: { userId },
+      });
+      await prisma.note.deleteMany({
+        where: { userId },
+      });
+      await prisma.user.delete({
+        where: { id: userId },
+      });
+    });
+  }
 }
