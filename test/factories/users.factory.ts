@@ -6,8 +6,15 @@ export class UsersFactory {
     return await prisma.user.create({
       data: {
         email: faker.internet.email(),
-        password: faker.internet.password(),
+        password: 'str0ngP@ss',
       },
     });
   }
+}
+
+export function createUser() {
+  return {
+    email: faker.internet.email(),
+    password: 'str0ngP@ss',
+  };
 }

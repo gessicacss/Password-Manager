@@ -4,7 +4,7 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { cleanDb } from './helpers';
-import { UsersFactory } from './factories/users.factory';
+import { UsersFactory, createUser } from './factories/users.factory';
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication;
@@ -66,11 +66,12 @@ describe('UsersController (e2e)', () => {
     });
 
     it('POST /users/sign-in should return 200', async () => {
-      const user = await UsersFactory.build(prisma);
+      const user = createUser();
+      await request(app.getHttpServer()).post('/users/sign-up').send(user);
       const response = await request(app.getHttpServer())
         .post('/users/sign-in')
-        .send({ email: user.email, password: user.password });
-      expect(response.statusCode).toBe(HttpStatus.UNAUTHORIZED);
+        .send(user);
+      expect(response.statusCode).toBe(HttpStatus.OK);
     });
   });
 });
